@@ -3,6 +3,7 @@ package front.elastic.services;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -22,15 +23,18 @@ import org.springframework.stereotype.Repository;
 
 import dao.mongo.entity.ConnectionUsers;
 import dao.mongo.entity.Geolocalisation;
+import dao.mongo.entity.Loves;
 import dao.mongo.entity.Session;
 import dao.mongo.entity.SessionLibelle;
 import dao.mongo.entity.Sessions;
+import dao.mongo.services.LovesService;
 import dao.mongo.services.SessionService;
 
 public class StatsDynamique {
 
 	private TransportClient client;
 	private SessionService sessionService;
+	private LovesService lovesService;
 	ManageUsers m;
 	ManageConnexion c;
 	ManageCalculLoveConnex lc;
@@ -45,6 +49,7 @@ public class StatsDynamique {
 		// se connecter à mongoDB
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("mongo-context.xml");
 		sessionService = ctx.getBean(SessionService.class);
+		lovesService = ctx.getBean(LovesService.class);
 		
 
 		// se connecter à Elastic Search
@@ -61,7 +66,7 @@ public class StatsDynamique {
 
 
 
-
+	///////////////////////////////////////////////////////////////////////////////////////	///////////////////////////////////////////////////////////////////////////////////////
 	public void deconnectionUserById(Integer id) throws IOException, InterruptedException, ExecutionException {
 		//mise à jour dans mongo collection historique
 		Double dureeSessionDeconnectees= sessionService.deconnectUserById(id);
@@ -80,23 +85,62 @@ public class StatsDynamique {
 		
 	}
 	
-	public void addUserSessionById(Integer id, String plateforme, Geolocalisation geoLoc) {
-		Session session = new Session(plateforme, LocalDateTime.now(), null, geoLoc);
+	public void addUserSessionById(Integer id, String plateforme, Geolocalisation geoLoc) throws InterruptedException, ExecutionException, IOException {
+		Session session = new Session(plateforme, LocalDateTime.now(), LocalDateTime.of(1900,01,01,0,0), geoLoc);
 		SessionLibelle sessionLibelle = new SessionLibelle(session);
 		ConnectionUsers cu = sessionService.getConnectionsByUserID(id);
-		int nbrSession = cu.getSessions().getSessionLibelle().size();
-		for(SessionLibelle s : cu.getSessions().getSessionLibelle()) {
-			System.out.println(s);
-		}
-		cu.getSessions().getSessionLibelle().add(sessionLibelle);
+		int nbrSession = cu.getSessions().size();
+		cu.getSessions().add(sessionLibelle);
+		// ajout en BDD
 		sessionService.addSessionToUser(cu);
+		
+		//mise à jour dans ElasticSearch : le user est connecte
+				UpdateRequest updateRequest = new UpdateRequest();
+				updateRequest.index(m.getIndex());
+				updateRequest.type(m.getType());
+				updateRequest.id(id.toString());
+				updateRequest.doc(XContentFactory.jsonBuilder()
+						.startObject()
+						.field("connection", plateforme)
+						.endObject());
+				client.update(updateRequest).get();
+		
+	}
+	
+	public void addLove(Loves love) throws IOException, InterruptedException, ExecutionException {
+		// ajout en BDD
+		lovesService.addLove(love);
+		
+		//augmenter le nbr de love dans elasticSearch
+		
+				// on récupère la durée moyenne sur ElasticSearch
+				int nbrLoveUpdate=0;
+				GetResponse getResponse = client.prepareGet(lc.getIndex(),lc.getType(),lc.getId_unique().toString()).execute().actionGet();
+			    Map<String, Object> source = getResponse.getSource();
+			    for (Map.Entry<String, Object> entry : source.entrySet())
+			    {
+			    	if (entry.getKey().equals("nbLoves")) {
+			    		nbrLoveUpdate = Integer.parseInt(entry.getValue().toString()) +1;
+			    	}
+			    }
+			    
+			 // update sur ElasticSearch
+			    UpdateRequest updateRequest = new UpdateRequest();
+				updateRequest.index(lc.getIndex());
+				updateRequest.type(lc.getType());
+				updateRequest.id(lc.getId_unique().toString());
+				updateRequest.doc(XContentFactory.jsonBuilder()
+						.startObject()
+						.field("nbLoves", nbrLoveUpdate)
+						.endObject());
+				client.update(updateRequest).get();
 	}
 
 	private void updateDureeConnexMoyen(Double dureeSessionDeconnectees) throws IOException, InterruptedException, ExecutionException {
 		
 		// on récupère la durée moyenne sur ElasticSearch
 		double moyConnex=0;
-		GetResponse getResponse = client.prepareGet(lc.getIndex(),lc.getType(), "1").execute().actionGet();
+		GetResponse getResponse = client.prepareGet(lc.getIndex(),lc.getType(), lc.getId_unique().toString()).execute().actionGet();
 	    Map<String, Object> source = getResponse.getSource();
 	    for (Map.Entry<String, Object> entry : source.entrySet())
 	    {

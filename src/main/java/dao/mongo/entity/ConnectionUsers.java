@@ -11,7 +11,7 @@ public class ConnectionUsers {
 	
 	@Id
 	private Integer _id;
-	private Sessions sessions;
+	private List<SessionLibelle> sessions;
 	
 	
 	
@@ -20,7 +20,7 @@ public class ConnectionUsers {
 	}
 
 
-	public ConnectionUsers(Integer _id, Sessions sessions) {
+	public ConnectionUsers(Integer _id, List<SessionLibelle> sessions) {
 		super();
 		this._id = _id;
 		this.sessions = sessions;
@@ -46,12 +46,12 @@ public class ConnectionUsers {
 	}
 
 
-	public Sessions getSessions() {
+	public List<SessionLibelle> getSessions() {
 		return sessions;
 	}
 
 
-	public void setSessions(Sessions sessions) {
+	public void setSessions(List<SessionLibelle> sessions) {
 		this.sessions = sessions;
 	}
 	

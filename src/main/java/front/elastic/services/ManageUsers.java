@@ -152,6 +152,7 @@ public class ManageUsers {
 		client.prepareIndex(index,type, prof.getId().toString()).setSource(xb).get();
 	}
 
+	
 	private Utilisateur convertToProfElastic(User user) {
 		GeoPoint geo = new GeoPoint(user.getGeoLoc().getLat(),user.getGeoLoc().getLon());
 		int age = calculateAge(user.getDateNaissance(),LocalDate.now());
@@ -174,16 +175,17 @@ public class ManageUsers {
 		return new ElevesLovegos(user.get_id(), getUserConnection(user), user.getType(), age, user.getGenre(), geo, user.getStatutPremium(),motifs);
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////
 	public String getUserConnection(User u) {
 		ConnectionUsers sessions = sessionService.getConnectionsByUserID(u.get_id());
 		boolean connected = false;
 		if(sessions != null) {
-			for(int i=0;i< sessions.getSessions().getSessionLibelle().size();i++) {
-				SessionLibelle listeSessions = sessions.getSessions().getSessionLibelle().get(i) ;
+			for(int i=0;i< sessions.getSessions().size();i++) {
+				SessionLibelle listeSessions = sessions.getSessions().get(i) ;
 				if(listeSessions.getSession().getDateDeconnexion() == null) {
 					connected = true;
-					for(int j=i+1;j< sessions.getSessions().getSessionLibelle().size();j++) {
-						SessionLibelle listeSessionsSuite = sessions.getSessions().getSessionLibelle().get(j);
+					for(int j=i+1;j< sessions.getSessions().size();j++) {
+						SessionLibelle listeSessionsSuite = sessions.getSessions().get(j);
 						if(listeSessionsSuite.getSession().getDateDeconnexion() == null 
 								&& !listeSessions.getSession().getPlateforme().equalsIgnoreCase(listeSessionsSuite.getSession().getPlateforme())) {
 							return "both";

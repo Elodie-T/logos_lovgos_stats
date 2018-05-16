@@ -77,6 +77,7 @@ public class ManageCalculLoveConnex {
 		}
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////
 	public void addCalculLoveConnex(List<HistoriqueConnex> listeConnex) throws IOException {
 		XContentBuilder xb =  XContentFactory.jsonBuilder().startObject();
 		xb.field("id",id_unique)
@@ -107,6 +108,7 @@ public class ManageCalculLoveConnex {
 		return numerateur/denominateur;
 	}
 
+	///////////////////////////////////////////////////////////////////////////////////////
 	public double getDureeConnexMoyen() {
 		long numerateur=0;
 		double denominateur=0;

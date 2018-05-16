@@ -34,6 +34,9 @@ public class LovesService  {
 		return mongoOps.findAll(Loves.class);
 	}
 	
+	public void addLove(Loves love) {
+		mongoOps.save(love);
+	}
 	
 
 

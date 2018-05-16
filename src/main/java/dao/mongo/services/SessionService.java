@@ -39,12 +39,12 @@ public class SessionService {
 		return mongoOps.findAll(ConnectionUsers.class);
 	}
 	
-	
+	///////////////////////////////////////////////////////////////////////////////////////
 	public List<Session> getAllSessionByDate(LocalDate date) {
 		 List<ConnectionUsers> sessionsUsers = mongoOps.findAll(ConnectionUsers.class);
 		 List<Session> allSessionsByDate = new ArrayList<Session>();
 		 for( ConnectionUsers s : sessionsUsers) {
-			List<SessionLibelle> listeSessions = s.getSessions().getSessionLibelle();
+			List<SessionLibelle> listeSessions = s.getSessions();
 			for(int i =0; i< listeSessions.size(); i++) {
 				LocalDateTime dateTime = listeSessions.get(i).getSession().getDateConnexion();
 				LocalDate dateSession = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
@@ -64,7 +64,7 @@ public class SessionService {
 		List<ConnectionUsers> sessionsUsers = mongoOps.find(query, ConnectionUsers.class);
 		LocalDate dateMin = LocalDate.of(3000, 01, 01);
 		for( ConnectionUsers s : sessionsUsers) {
-			List<SessionLibelle> listeSessions = s.getSessions().getSessionLibelle();
+			List<SessionLibelle> listeSessions = s.getSessions();
 			for(int i =0; i< listeSessions.size(); i++) {
 				LocalDateTime dateTime = listeSessions.get(i).getSession().getDateConnexion();
 				LocalDate dateSession = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
@@ -84,7 +84,7 @@ public class SessionService {
 		List<ConnectionUsers> sessionsUsers = mongoOps.find(query, ConnectionUsers.class);
 		LocalDate dateMax = LocalDate.of(1900,01,01);
 		for( ConnectionUsers s : sessionsUsers) {
-			List<SessionLibelle> listeSessions = s.getSessions().getSessionLibelle();
+			List<SessionLibelle> listeSessions = s.getSessions();
 			for(int i =0; i< listeSessions.size(); i++) {
 				LocalDateTime dateTime = listeSessions.get(i).getSession().getDateConnexion();
 				LocalDate dateSession = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
@@ -101,14 +101,14 @@ public class SessionService {
 		long duration = 0;
 		long nbrSessionDeconnex=0;
 		ConnectionUsers sessions = getConnectionsByUserID(id);
-		for(int i=0;i< sessions.getSessions().getSessionLibelle().size();i++) {
-			if(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateDeconnexion() == null) {
-				sessions.getSessions().getSessionLibelle().get(i).getSession().setDateDeconnexion(LocalDateTime.now());
+		for(int i=0;i< sessions.getSessions().size();i++) {
+			if(sessions.getSessions().get(i).getSession().getDateDeconnexion() == null || sessions.getSessions().get(i).getSession().getDateDeconnexion().equals(LocalDateTime.of(1900,01,01,0,0))) {
+				sessions.getSessions().get(i).getSession().setDateDeconnexion(LocalDateTime.now());
 				
-				if(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateConnexion().isAfter(LocalDateTime.now())) {
-					duration = duration + (Duration.between(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateConnexion(),sessions.getSessions().getSessionLibelle().get(i).getSession().getDateDeconnexion()).getSeconds())*(-1);
+				if(sessions.getSessions().get(i).getSession().getDateConnexion().isAfter(LocalDateTime.now())) {
+					duration = duration + (Duration.between(sessions.getSessions().get(i).getSession().getDateConnexion(),sessions.getSessions().get(i).getSession().getDateDeconnexion()).getSeconds())*(-1);
 				}else {
-				duration += Duration.between(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateConnexion(),sessions.getSessions().getSessionLibelle().get(i).getSession().getDateDeconnexion()).getSeconds();
+				duration += Duration.between(sessions.getSessions().get(i).getSession().getDateConnexion(),sessions.getSessions().get(i).getSession().getDateDeconnexion()).getSeconds();
 				}
 				nbrSessionDeconnex ++;
 			}

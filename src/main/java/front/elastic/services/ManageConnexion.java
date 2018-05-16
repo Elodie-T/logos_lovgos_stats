@@ -65,6 +65,8 @@ public class ManageConnexion {
 		}
 	}
 	
+	
+	///////////////////////////////////////////////////////////////////////////////////////
 	public List<HistoriqueConnex> getNbrConnectionAllDates(){
 		List<ConnectionUsers> allSessions = sessionService.getAllUserConnections();
 		List<HistoriqueConnex> historiqueConnexions =  new ArrayList<HistoriqueConnex>();
