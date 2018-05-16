@@ -32,25 +32,29 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
 import dao.mongo.entity.ConnectionUsers;
+import dao.mongo.entity.Cours;
 import dao.mongo.entity.Session;
 import dao.mongo.entity.Sessions;
+import dao.mongo.entity.SuiviCours;
 import dao.mongo.entity.User;
 import dao.mongo.services.SessionService;
+import dao.mongo.services.SuiviCoursService;
 import front.elastic.users.ElevesLovegos;
 import front.elastic.users.HistoriqueConnex;
+import front.elastic.users.Utilisateur;
 
-public class ManageConnexion {
+public class ManageCours {
 	
 	private TransportClient client;
-	private String index = "connex_historique";
+	private String index = "cours";
 	private String type = "default";
-	private SessionService sessionService;
+	private SuiviCoursService suiviCoursService;
 
 	@SuppressWarnings({ "resource", "unchecked" })
-	public ManageConnexion() throws IOException {
+	public ManageCours() throws IOException {
 
 		ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext("mongo-context.xml");
-		sessionService = ctx.getBean(SessionService.class);
+		suiviCoursService = ctx.getBean(SuiviCoursService.class);
 
 
 		// se connecter à Elastic Search
@@ -65,51 +69,14 @@ public class ManageConnexion {
 		}
 	}
 	
-	public List<HistoriqueConnex> getNbrConnectionAllDates(){
-		List<ConnectionUsers> allSessions = sessionService.getAllUserConnections();
-		List<HistoriqueConnex> historiqueConnexions =  new ArrayList<HistoriqueConnex>();
-		LocalDate startDate = sessionService.getDateConnexionMin();
-//		LocalDate startDate = LocalDate.of(2018, 05, 10);
-		LocalDate endDate = sessionService.getDateConnexionMax();
-		
-		for(LocalDate date= startDate; date.isBefore(endDate); date = date.plusDays(1)) {
-			List<Session> sessionsByDate = sessionService.getAllSessionByDate(date);
-			HistoriqueConnex h = new HistoriqueConnex(date, sessionsByDate.size());
-			historiqueConnexions.add(h);
-		}
-		return historiqueConnexions;
-		
-	}
-	
-	public void addHistoriqueConnexion(HistoriqueConnex u) throws IOException {
+	public void addCours(Cours cours) throws IOException {
 		XContentBuilder xb =  XContentFactory.jsonBuilder().startObject();
-		xb.field("dateJour", u.getDateJour())
-		.field("nbConnections", u.getNbConnections());
+		List<SuiviCours> listeCours = suiviCoursService.getSuiviCoursByIdCours(cours.get_id());
+		xb.field("titre", cours.getTitre())
+		.field("langue", cours.getNiveau().getLangue().getLibelle())
+		.field("nbInscrits", listeCours.size());
 		xb.endObject();
-		client.prepareIndex(index,type).setSource(xb).get();
-
+		client.prepareIndex(index,type, cours.get_id().toString()).setSource(xb).get();
 	}
-
-	public String getIndex() {
-		return index;
-	}
-
-	public void setIndex(String index) {
-		this.index = index;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-	
-	
-
-	
-	
-	
 	
 }

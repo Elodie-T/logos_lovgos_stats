@@ -32,6 +32,8 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import dao.mongo.entity.ConnectionUsers;
+import dao.mongo.entity.Session;
+import dao.mongo.entity.SessionLibelle;
 import dao.mongo.entity.User;
 import dao.mongo.services.SessionService;
 import dao.mongo.services.UsersService;
@@ -176,16 +178,18 @@ public class ManageUsers {
 		ConnectionUsers sessions = sessionService.getConnectionsByUserID(u.get_id());
 		boolean connected = false;
 		if(sessions != null) {
-			for(int i=0;i< sessions.getSessions().length;i++) {
-				if(sessions.getSessions()[i].getSession().getDateDeconnexion() == null) {
+			for(int i=0;i< sessions.getSessions().getSessionLibelle().size();i++) {
+				SessionLibelle listeSessions = sessions.getSessions().getSessionLibelle().get(i) ;
+				if(listeSessions.getSession().getDateDeconnexion() == null) {
 					connected = true;
-					for(int j=i+1;j< sessions.getSessions().length;j++) {
-						if(sessions.getSessions()[j].getSession().getDateDeconnexion() == null 
-								&& !sessions.getSessions()[i].getSession().getPlateforme().equalsIgnoreCase(sessions.getSessions()[j].getSession().getPlateforme())) {
+					for(int j=i+1;j< sessions.getSessions().getSessionLibelle().size();j++) {
+						SessionLibelle listeSessionsSuite = sessions.getSessions().getSessionLibelle().get(j);
+						if(listeSessionsSuite.getSession().getDateDeconnexion() == null 
+								&& !listeSessions.getSession().getPlateforme().equalsIgnoreCase(listeSessionsSuite.getSession().getPlateforme())) {
 							return "both";
 						}
 					}
-					return sessions.getSessions()[i].getSession().getPlateforme();
+					return listeSessions.getSession().getPlateforme();
 				}
 			}
 		}
@@ -201,6 +205,22 @@ public class ManageUsers {
 		} else {
 			return 0;
 		}
+	}
+
+	public String getIndex() {
+		return index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 

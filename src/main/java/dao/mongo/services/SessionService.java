@@ -1,5 +1,6 @@
 package dao.mongo.services;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Repository;
 
 import dao.mongo.entity.ConnectionUsers;
 import dao.mongo.entity.Session;
+import dao.mongo.entity.SessionLibelle;
 import dao.mongo.entity.Sessions;
 import dao.mongo.entity.User;
 
@@ -42,12 +44,12 @@ public class SessionService {
 		 List<ConnectionUsers> sessionsUsers = mongoOps.findAll(ConnectionUsers.class);
 		 List<Session> allSessionsByDate = new ArrayList<Session>();
 		 for( ConnectionUsers s : sessionsUsers) {
-			Sessions listeSessions[] = s.getSessions();
-			for(int i =0; i< listeSessions.length; i++) {
-				LocalDateTime dateTime = listeSessions[i].getSession().getDateConnexion();
+			List<SessionLibelle> listeSessions = s.getSessions().getSessionLibelle();
+			for(int i =0; i< listeSessions.size(); i++) {
+				LocalDateTime dateTime = listeSessions.get(i).getSession().getDateConnexion();
 				LocalDate dateSession = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
 				if(dateSession.equals(date)) {
-					allSessionsByDate.add(listeSessions[i].getSession());
+					allSessionsByDate.add(listeSessions.get(i).getSession());
 //					System.out.println("user_id : " +s.get_id() +" sessions : "+listeSessions[i].getSession());
 				}
 			}
@@ -62,9 +64,9 @@ public class SessionService {
 		List<ConnectionUsers> sessionsUsers = mongoOps.find(query, ConnectionUsers.class);
 		LocalDate dateMin = LocalDate.of(3000, 01, 01);
 		for( ConnectionUsers s : sessionsUsers) {
-			Sessions listeSessions[] = s.getSessions();
-			for(int i =0; i< listeSessions.length; i++) {
-				LocalDateTime dateTime = listeSessions[i].getSession().getDateConnexion();
+			List<SessionLibelle> listeSessions = s.getSessions().getSessionLibelle();
+			for(int i =0; i< listeSessions.size(); i++) {
+				LocalDateTime dateTime = listeSessions.get(i).getSession().getDateConnexion();
 				LocalDate dateSession = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
 				if(dateSession.isBefore(dateMin)) {
 					dateMin=dateSession;
@@ -82,9 +84,9 @@ public class SessionService {
 		List<ConnectionUsers> sessionsUsers = mongoOps.find(query, ConnectionUsers.class);
 		LocalDate dateMax = LocalDate.of(1900,01,01);
 		for( ConnectionUsers s : sessionsUsers) {
-			Sessions listeSessions[] = s.getSessions();
-			for(int i =0; i< listeSessions.length; i++) {
-				LocalDateTime dateTime = listeSessions[i].getSession().getDateConnexion();
+			List<SessionLibelle> listeSessions = s.getSessions().getSessionLibelle();
+			for(int i =0; i< listeSessions.size(); i++) {
+				LocalDateTime dateTime = listeSessions.get(i).getSession().getDateConnexion();
 				LocalDate dateSession = LocalDate.of(dateTime.getYear(), dateTime.getMonth(), dateTime.getDayOfMonth());
 				if(dateSession.isAfter(dateMax)) {
 					dateMax=dateSession;
@@ -95,6 +97,30 @@ public class SessionService {
 		
 	}
 	
-
+	public Double deconnectUserById(Integer id){
+		long duration = 0;
+		long nbrSessionDeconnex=0;
+		ConnectionUsers sessions = getConnectionsByUserID(id);
+		for(int i=0;i< sessions.getSessions().getSessionLibelle().size();i++) {
+			if(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateDeconnexion() == null) {
+				sessions.getSessions().getSessionLibelle().get(i).getSession().setDateDeconnexion(LocalDateTime.now());
+				
+				if(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateConnexion().isAfter(LocalDateTime.now())) {
+					duration = duration + (Duration.between(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateConnexion(),sessions.getSessions().getSessionLibelle().get(i).getSession().getDateDeconnexion()).getSeconds())*(-1);
+				}else {
+				duration += Duration.between(sessions.getSessions().getSessionLibelle().get(i).getSession().getDateConnexion(),sessions.getSessions().getSessionLibelle().get(i).getSession().getDateDeconnexion()).getSeconds();
+				}
+				nbrSessionDeconnex ++;
+			}
+		}
+		Double moyenneDureeConnex = (double) (duration/nbrSessionDeconnex);
+		// mise à jour dans mongo
+		mongoOps.save(sessions);
+		return moyenneDureeConnex; 
+	}
+	
+	public void addSessionToUser(ConnectionUsers cu) {
+		mongoOps.save(cu,"historique");
+	}
 
 }

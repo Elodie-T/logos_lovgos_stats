@@ -37,6 +37,8 @@ public class StatTest {
 				Loves love = lovesService.getLovesByID(4);
 				System.out.println(love);
 				
+				
+				
 //				ConnectionUsers c = usersConnection.getConnectionsByUserID(14500);
 //				System.out.println(c);
 				

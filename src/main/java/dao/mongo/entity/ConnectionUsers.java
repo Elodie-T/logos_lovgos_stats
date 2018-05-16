@@ -1,6 +1,7 @@
 package dao.mongo.entity;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -10,7 +11,7 @@ public class ConnectionUsers {
 	
 	@Id
 	private Integer _id;
-	private Sessions sessions[];
+	private Sessions sessions;
 	
 	
 	
@@ -19,16 +20,19 @@ public class ConnectionUsers {
 	}
 
 
-	public ConnectionUsers(Integer _id, Sessions[] sessions) {
+	public ConnectionUsers(Integer _id, Sessions sessions) {
 		super();
 		this._id = _id;
 		this.sessions = sessions;
 	}
 
 
+
+
+
 	@Override
 	public String toString() {
-		return "ConnectionUsers [_id=" + _id + ", sessions=" + Arrays.toString(sessions) + "]";
+		return "ConnectionUsers [_id=" + _id + ", sessions=" + sessions + "]";
 	}
 
 
@@ -42,12 +46,12 @@ public class ConnectionUsers {
 	}
 
 
-	public Sessions[] getSessions() {
+	public Sessions getSessions() {
 		return sessions;
 	}
 
 
-	public void setSessions(Sessions[] sessions) {
+	public void setSessions(Sessions sessions) {
 		this.sessions = sessions;
 	}
 	
