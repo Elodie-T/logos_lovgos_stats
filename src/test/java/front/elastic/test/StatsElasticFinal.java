@@ -36,23 +36,23 @@ public class StatsElasticFinal {
 //			System.out.println(u);
 //			m.addUser(u);
 //		}
-//		
-//		//ajouter tous les historiques de connexions : création de l'index connex_historique
-//		List<HistoriqueConnex> listeConnex = c.getNbrConnectionAllDates();
+		
+		// ajouter tous les historiques de connexions : création de l'index connex_historique
+		List<HistoriqueConnex> listeConnex = c.getNbrConnectionAllDates();
 //		for(HistoriqueConnex h : listeConnex) {
 //			System.out.println(h);
 //			c.addHistoriqueConnexion(h);
 //		}
-//		
+		
 //		// ajouter le nbr de loves total, le nbr moyen de visite par jour et la durée moyenne de connexion : création de l'index nbr_love_connex
 //		lc.addCalculLoveConnex(listeConnex);
 			
 		//ajouter tous les cours : creation de l'index cours
-				List<Cours> listeCours = coursService.getAllCours();
-				for(Cours cours : listeCours) {
-					System.out.println(cours);
-					mcours.addCours(cours);
-				}
+//				List<Cours> listeCours = coursService.getAllCours();
+//				for(Cours cours : listeCours) {
+//					System.out.println(cours);
+//					mcours.addCours(cours);
+//				}
 		
 		// si besoin de supprimer un user selon son id
 //			m.deleteUtilisateur(u.get_id());

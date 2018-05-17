@@ -80,23 +80,23 @@ public class ManageCalculLoveConnex {
 	///////////////////////////////////////////////////////////////////////////////////////
 	public void addCalculLoveConnex(List<HistoriqueConnex> listeConnex) throws IOException {
 		XContentBuilder xb =  XContentFactory.jsonBuilder().startObject();
-		xb.field("id",id_unique)
-		.field("moyCon", getDureeConnexMoyen())
+		xb.field("moyCon", getDureeConnexMoyen())
 		.field("nbLoves", lovesService.getAllLoves().size())
 		.field("nbVisites", getNbrConnectionMoyen(listeConnex));
 		xb.endObject();
-		client.prepareIndex(index,type).setSource(xb).get();
+		client.prepareIndex(index,type, id_unique.toString()).setSource(xb).get();
 
 	}
 	
-//	public void addlove() throws IOException {
-//		XContentBuilder xb =  XContentFactory.jsonBuilder().startObject();
-//		xb.field("moyCon",11303)
-//		.field("nbLoves", 30000)
-//		.field("nbVisites", 1812);
-//		xb.endObject();
-//		client.prepareIndex(index,type,"1").setSource(xb).get();
-//	}
+	public void addFAKElovecalcul() throws IOException {
+		XContentBuilder xb =  XContentFactory.jsonBuilder().startObject();
+		xb.field("moyCon", 11000)
+		.field("nbLoves", 30000)
+		.field("nbVisites", 25);
+		xb.endObject();
+		client.prepareIndex(index,type,id_unique.toString()).setSource(xb).get();
+	}
+	
 
 
 	public Double getNbrConnectionMoyen(List<HistoriqueConnex> connex) {
@@ -121,15 +121,16 @@ public class ManageCalculLoveConnex {
 		for(LocalDate date= startDate; date.isBefore(endDate); date = date.plusDays(1)) {
 			List<Session> sessionsByDate = sessionService.getAllSessionByDate(date);
 			for(Session s: sessionsByDate) {
-				if(s.getDateDeconnexion() != null) {
+				if(s.getDateDeconnexion() != null || !s.getDateDeconnexion().equals(LocalDateTime.of(1900,01,01,0,0))) {
 					Duration d = getDurationBySession(s);
 					numerateur += d.getSeconds();
 					denominateur += 1;
+					System.out.println("numerateur : "+numerateur+" denominateur : "+denominateur);
 				}
 			}
 
 		}
-		System.out.println("numerateur : "+numerateur+" denominateur : "+denominateur);
+		System.out.println("numerateurfinal : "+numerateur+" denominateurfinal : "+denominateur);
 		return numerateur/denominateur;
 	}
 	

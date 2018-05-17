@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -182,7 +183,7 @@ public class ManageUsers {
 		if(sessions != null) {
 			for(int i=0;i< sessions.getSessions().size();i++) {
 				SessionLibelle listeSessions = sessions.getSessions().get(i) ;
-				if(listeSessions.getSession().getDateDeconnexion() == null) {
+				if(listeSessions.getSession().getDateDeconnexion() == null || listeSessions.getSession().getDateDeconnexion().equals(LocalDateTime.of(1900,01,01,0,0))) {
 					connected = true;
 					for(int j=i+1;j< sessions.getSessions().size();j++) {
 						SessionLibelle listeSessionsSuite = sessions.getSessions().get(j);

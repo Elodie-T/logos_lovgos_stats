@@ -53,14 +53,20 @@ public class StatElasticSearch {
 		SessionService sessionService = ctx.getBean(SessionService.class);
 		LovesService lovesService = ctx.getBean(LovesService.class);
 		
+		lc.addFAKElovecalcul();
 		
-		List<Loves> listeLove = lovesService.getAllLoves();
+		sd.getdureeMoyenne();
+		
+		
+//		 double nbrVisiteMoyenParJourUpdate = (double) 125/855;
+//		 System.out.println(nbrVisiteMoyenParJourUpdate);
+//		List<Loves> listeLove = lovesService.getAllLoves();
 //		Integer idLove = listeLove.size()+1;
 //		Integer id_exp = 11220;
 //		Integer id_dest = 13544;
 //		Boolean vuParExp = false;
-		Loves love = new Loves(listeLove.size()+1, LocalDate.now(), false, 11220, 13544);
-		sd.addLove(love);
+//		Loves love = new Loves(listeLove.size()+1, LocalDate.now(), false, 11220, 13544);
+//		sd.addLove(love);
 		
 //		Geolocalisation geoLoc = new Geolocalisation(12.54, 3.0);
 //		sd.addUserSessionById(3, "logos", geoLoc);
