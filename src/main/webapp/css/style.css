@@ -1,0 +1,348 @@
+
+#aside {
+	height: 130vmax;
+	position: relative;
+	color: white;
+}
+#aside a {
+	color: #cceeff
+}
+
+.eleve {
+	background: rgb(0, 29, 18,0.65);
+}
+
+.prof {
+	background: rgb(0, 06, 28,0.65);
+}
+
+#asideContent > * {
+	margin: 10px;
+}
+
+#niveaux_eleve ul {
+	list-style: none;
+	padding-left: 0;
+	font-size: 15px;	
+	
+}
+
+#profil {
+	text-align: center;
+	font-weight: bold;
+	font-size: 18px;
+}
+
+#profilMenu {
+	list-style-type: none;
+	padding-left: 0;
+	margin-top: 90px;
+	font-size: 16px;
+}
+#profilMenu li {
+	padding: 6px;
+	cursor: pointer;
+}
+
+
+@media ( max-width : 500px) {
+	#profilMenu {
+		list-style-type: none;
+		margin-top: 10px;
+	}
+}
+
+#profilMenu li:hover {
+	background-color: rgba(255,255,255,0.3);
+}
+
+#profilMenu li .glyphicon {
+	padding-right: 10px;
+	margin: 0px;
+	font-size: 20px;
+	color: #fcfcfc;
+}
+
+#profilPicture {
+	width: 120px;
+	height: 120px;
+	border-radius: 60px;
+}
+
+#divLogin span {
+	font-size: 20px;
+}
+
+#divPremium {
+	font-size: 16px;
+	position: absolute;
+	bottom: 30px;
+}
+
+#divPremium p, #divPremium  span {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#login_header {
+	height: 100vh;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.loginform {
+	text-align: center;
+	padding: 50px;
+	background-color: rgba(220, 220, 220, 0.9);
+	border-radius: 15px;
+}
+
+.badge.bravo {
+	background-color: #008000;
+}
+.badge.pending {
+	background-color: #ffcf2d;
+}
+
+
+input[type="submit"]:hover, input[type="button"]:hover, button:hover {
+	background-color: midnightblue;
+	color: white;
+}
+
+#loginWindow {
+	background-image: url("../images/wallpaper.jpg");
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+#inscription {
+	text-align: center;
+	margin: 30px;
+}
+
+#inscription fieldset {
+	height: 100vh;
+	width: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: auto;
+	margin-top: 80px;
+}
+
+#inscription form {
+	text-align: center;
+	padding: 50px;
+	background-color: rgba(220, 220, 220, 0.5);
+	border-radius: 15px;
+}
+
+.window {
+	background-image: url("../images/mountain.jpg");
+	background-repeat: no-repeat;
+	background-size: 100%;
+}
+
+/* INSCRIPTION COURS */
+.cours.inscription button,
+.cours.inscription input[type="button"],
+.cours.inscription input[type="submit"] {
+	margin-left: 45px;
+}
+
+.tab-content.cours {
+	background-color: rgba(255,255,255,0.7);
+	padding: 14px 0;
+}
+
+#my-cours a {
+	
+	font-size: 1.3em;
+	line-height: 1.7em;
+}
+
+
+
+#cour_langue {
+	margin-left: 4px;
+	margin-top:10px;
+}
+
+#cour_langue .nav nav-tabs a {
+	font-weight: bold;
+	
+}
+
+#cour_langue {
+	text-decoration: underline;
+	color: #17827d;
+}
+
+#evaluation {
+	margin-top:10px;
+	font-size: medium;
+	font-weight: bold;
+}
+
+label.deja-inscrit-cours {
+	color: #cc9f42;
+	font-weight: bold;
+}
+/* suivi */
+
+.suivi-eleve .mes-cours .cours {
+	padding: 5px;
+}
+.suivi-eleve .mes-cours .cours h3 {
+	margin-top: 0;
+}
+.suivi-eleve .mes-cours .cours:hover {
+	background: rgba(255,255,255,0.5);
+}
+
+/* MESSAGERIE */
+
+.btn-rafraichir{
+	/*display: none;*/
+}
+
+.conversations{
+	height: 100vmax;
+	background-color: white;
+}
+
+.messages-affiche{
+	padding: 50px 20px 50px 0;
+	position: relative;
+	
+}
+
+.ecrire-message {
+	/*position: absolute;
+	bottom: 0px;
+	left: 0;
+	right: 0;*/
+	width: 100%;
+}
+
+.ecrire-message div {
+	display: inline-block;
+	/*bottom: 0px;*/
+}
+
+#champs-envoi-div{
+	width: 100%;
+}
+
+.message{
+	border-radius: 10px;
+	margin : 5px;
+	padding : 10px;
+	max-width: 80%;
+}
+
+/* .messages{ */
+/* 	overflow: scroll; */
+/* 	height:85%; */
+/* } */
+
+.myself{
+	background-color: rgba(0,35,0,0.7);
+	text-align: right;
+	position: relative;
+	right: -20%;
+	color: white;
+}
+
+
+
+.other{
+	background-color: rgba(0,20,35,0.7);
+	color: white;
+	
+	
+}
+
+#titreConversation{
+	text-align: center;
+}
+
+.nomAuteur, .date-lecture{
+	display: block;
+	/*font-style: italic;*/
+	color: #ccc;
+	font-weight: 100;
+	font-size: 12px;
+}
+
+
+/* EXERCICE */
+
+.ui-droppable-hover {
+	background-color: pink;
+}
+
+.wrap-input-drop {
+    background: rgba(212, 228, 251, 0.38);
+    height: 30px;
+    width: 150px;
+    display: inline-block;
+    vertical-align: middle;
+    /* margin-top: 12px; */
+    border: 3px dashed #6969a7;
+}
+
+.zone-drag-drop .phrase {
+	line-height: 3em;
+}
+.zone-drag-drop .phrase .wrap-input-drag{
+	line-height: 1em;
+	display: block;
+	top: 0; right: 0;
+	left: 0; bottom: 0;
+	 border: none;
+	 font-size: bold;
+}
+
+.wrap-input-drag {
+	 display: inline-block;
+    text-align: center;
+    padding: 4px 20px;
+    border: 1px solid;
+    background: rgba(243, 247, 251, 0.74);
+
+}
+
+.qcm-wrap td {
+	padding: 6px 17px 6px 0;
+}
+.qcm-wrap td label {
+  	padding-left: 6px;
+}
+
+/* DIVERS */
+
+input.btn-refresh-nb-messages {
+	display: none;
+	font-size: 3em;
+}
+span[data-nb-messages="0"] {
+	display: none;
+}
+
+
+
+	
+
+
+
+
+
+
+
+
+
+

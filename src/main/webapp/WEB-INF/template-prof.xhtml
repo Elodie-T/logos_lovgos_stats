@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:composite="http://java.sun.com/jsf/composite"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+<h:head>
+	<title><ui:insert name="titre" /></title>
+	<link rel="stylesheet" href="../css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<script src="../js/jquery.js"></script>
+	<script src="../js/bootstrap.min.js"></script>
+	<script src="../js/logos.js"></script>
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1.0, shrink-to-fit=no"></meta>
+	<ui:insert name="scriptsEtCss" />
+	<f:metadata>
+		<f:event listener="#{filtreMB.verifierConnectedProfesseur}"
+			type="preRenderView" />
+	</f:metadata>
+</h:head>
+<body class="window">
+	<div class="container-fluid">
+		<div class="row">
+			<div id="aside" class="col-md-3 col-lg-2 prof">
+				<h:form>
+					<div id="asideContent">
+						<div id="divLogin">
+							<h:commandLink action="#{loginMB.seDeconnecter}">
+								<span class="glyphicon glyphicon-off" />
+							</h:commandLink>
+						</div>
+						<div id="profil">
+							<img id="profilPicture"
+								src="../images/arbre.jpg"
+								alt="image_profil" />
+							<p>#{loginMB.userConnected.prenom}
+								#{loginMB.userConnected.nom}</p>
+							
+						</div>
+						<div id="nav">
+							<ul id="profilMenu">
+								<li><span class="glyphicon glyphicon-copy"></span><a href="#" onclick="return false" >Suivi</a></li>
+								<li><span class="glyphicon glyphicon-book"></span><a href="#" onclick="return false" >Cours</a></li>
+								<li>
+									<span class="glyphicon glyphicon-envelope"></span><h:link outcome="messagerie_professeur.xhtml">Messages</h:link>
+									&nbsp;
+									<h:panelGroup id="nb-messages" styleClass="badge" >
+										<f:passThroughAttribute name="data-nb-messages" value="#{messagerieMB.nbNouveauxMessages}" />
+										<h:outputText    value="#{messagerieMB.nbNouveauxMessages}" />
+									</h:panelGroup>									
+								</li>
+								<li><span class="glyphicon glyphicon-edit"></span><a href="#" onclick="return false" >Corrections
+									<span class="badge">3</span></a></li>
+							</ul>
+						</div>
+						<h:commandButton action="#{messagerieMB.updateNombreMessagesNonLus()}" value="Refresh" styleClass="btn-refresh-nb-messages"><f:ajax render="nb-messages"></f:ajax></h:commandButton>
+					</div>
+				</h:form>
+			</div>
+			<div class="col-md-9 col-lg-10">
+				<ui:insert name="contenu" />
+			</div>
+		</div>
+	</div>
+</body>
+</html>
